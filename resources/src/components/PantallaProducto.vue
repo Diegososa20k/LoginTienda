@@ -6,7 +6,6 @@
             <span><i class="mdi mdi-magnify"></i></span>
             <input v-model="busqueda" @keyup.enter="buscarProductos" type="search" class="form-control" placeholder="Buscar Producto">
             <!-- <button @click="buscarProductos" class="btn btn-primary">Buscar</button> -->
-
         </div>
 
         <div class="d-flex justify-content-end mb-3">
@@ -225,6 +224,8 @@ export default {
             .then(response => {
                 // Remove the product from ProductosGuardados on successful deletion
                 this.ProductosGuardados.splice(index, 1);
+                this.ProductosOriginales = [...this.ProductosGuardados];
+                this.filtrarProductos();
                 Swal.fire({
                 icon: 'success',
                 title: 'Producto eliminado con éxito',
