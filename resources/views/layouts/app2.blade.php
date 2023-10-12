@@ -1,10 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdi/css/materialdesignicons.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -21,13 +17,9 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
 <body>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <button class="btn margen btn-menu" data-bs-toggle="offcanvas" data-bs-target="#offcanvasMenu" aria-controls="offcanvasMenu">
-                    <i class="mdi mdi-menu icon navbar-brand"></i>
-                </button>
                 <a class="navbar-brand" href="{{ route('home') }}">
                     {{ config('Tiendita', 'Tiendita') }}
                 </a>
@@ -82,17 +74,7 @@
 
         <main class="py-4">
             @yield('content')
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasMenu" aria-labelledby="offcanvasMenuLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasMenuLabel">Menú</h5>
-                    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="list-group">
-                        <li class="list-group-item"><a href="{{ route('producto') }}">Catalogo de Productos</li>
-                        <li class="list-group-item"><a href="#">Reporte de ventas y ganancias</li>
-                    </ul>
-                </div>
+
         </main>
     </div>
 </body>
@@ -104,8 +86,4 @@
     background-color: aqua !important;
 }
 
-.btn-menu{
-    background-color: blueviolet !important;
-    color: aliceblue !important;
-}
 </style>

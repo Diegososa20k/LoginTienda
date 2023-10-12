@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Models\Producto;
+use App\Http\Controllers\ProductoController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+Route::post('/productos', [ProductoController::class, 'store']);
+Route::get('/productos', [ProductoController::class, 'index']);
+Route::delete('/productos/{id}', [ProductoController::class, 'destroy']);
+Route::put('productos/{id}', [ProductoController::class, 'update']);
+//Rutas para las pantallas
+Route::get('/producto', [ProductoController::class, 'mostrarProducto'])->name('producto');

@@ -1,5 +1,5 @@
 @extends('layouts.app')
 
 @section('content')
-<pantalla-venta></pantalla-venta>
+<pantalla-producto></pantalla-producto>
 @endsection
