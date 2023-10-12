@@ -3,9 +3,10 @@
     <div class="container">
 
         <div class="d-inline-flex mb-3">
+            <span><i class="mdi mdi-magnify"></i></span>
             <input v-model="busqueda" @keyup.enter="buscarProductos" type="search" class="form-control" placeholder="Buscar Producto">
             <!-- <button @click="buscarProductos" class="btn btn-primary">Buscar</button> -->
-            <span><i class="mdi mdi-magnify"></i></span>
+
         </div>
 
         <div class="d-flex justify-content-end mb-3">
@@ -13,6 +14,24 @@
                 Agregar nuevo Producto
             </button>
         </div>
+
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end">
+                <li class="page-item" :class="{ disabled: paginaActual === 1 }">
+                    <a class="page-link" href="#" aria-label="Previous" @click.prevent="cambiarPagina(paginaActual - 1)">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li v-for="pagina in paginasMostradas" :key="pagina" class="page-item" :class="{ active: pagina === paginaActual }">
+                    <a class="page-link" href="#" @click.prevent="cambiarPagina(pagina)">{{ pagina }}</a>
+                </li>
+                <li class="page-item" :class="{ disabled: paginaActual === totalPaginas }">
+                    <a class="page-link" href="#" aria-label="Next" @click.prevent="cambiarPagina(paginaActual + 1)">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
 
 
@@ -33,7 +52,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="(producto, index) in ProductosGuardados" :key="index">
+                    <tr v-for="(producto, index) in productosMostrados" :key="index">
                     <td>{{ producto.nombre }}</td>
                     <td>{{ producto.cantidad }}</td>
                     <td>{{ producto.precio }}</td>
@@ -111,6 +130,9 @@ export default {
             isNew: true,
             busqueda: '',
             ProductosOriginales:[],
+            productosPorPagina: 10,
+            paginaActual: 1,
+            productosMostrados: [],
         }
     },
     methods:{
@@ -249,10 +271,52 @@ export default {
             };
         },
 
+        //paginacion
+
+        cambiarPagina(pagina) {
+            if (pagina > 0 && pagina <= this.totalPaginas) {
+                this.paginaActual = pagina;
+                this.actualizarProductosMostrados();
+            }
+        },
+
+        actualizarProductosMostrados() {
+            const inicio = (this.paginaActual - 1) * this.productosPorPagina;
+            const fin = inicio + this.productosPorPagina;
+            this.productosMostrados = this.ProductosGuardados.slice(inicio, fin);
+        },
+
+
     },
     mounted(){
         this.getProductos();
-    }
+    },
+    computed: {
+        totalPaginas() {
+            return Math.ceil(this.ProductosGuardados.length / this.productosPorPagina);
+        },
+
+        paginasMostradas() {
+            const totalPaginasMostradas = 3; // Cambia esto para mostrar más o menos páginas
+            const mitadTotalPaginasMostradas = Math.floor(totalPaginasMostradas / 2);
+
+            const primeraPaginaMostrada = Math.max(1, this.paginaActual - mitadTotalPaginasMostradas);
+            const ultimaPaginaMostrada = Math.min(this.totalPaginas, primeraPaginaMostrada + totalPaginasMostradas - 1);
+
+            const paginas = [];
+            for (let i = primeraPaginaMostrada; i <= ultimaPaginaMostrada; i++) {
+            paginas.push(i);
+            }
+
+            return paginas;
+        },
+    },
+    watch: {
+        ProductosGuardados() {
+            this.paginaActual = 1;
+            this.actualizarProductosMostrados();
+        }
+    },
 };
 </script>
 
