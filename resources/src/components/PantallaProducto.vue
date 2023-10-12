@@ -1,6 +1,13 @@
 <template>
 
     <div class="container">
+
+        <div class="d-inline-flex mb-3">
+            <input v-model="busqueda" @keyup.enter="buscarProductos" type="search" class="form-control" placeholder="Buscar Producto">
+            <!-- <button @click="buscarProductos" class="btn btn-primary">Buscar</button> -->
+            <span><i class="mdi mdi-magnify"></i></span>
+        </div>
+
         <div class="d-flex justify-content-end mb-3">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AgregarProducto">
                 Agregar nuevo Producto
@@ -18,7 +25,7 @@
                 <col style="width: 20%;" /> <!-- Adjust the width as needed -->
                 <thead>
                 <tr>
-                    <th scope="col">Nombre</th>
+                    <th scope="col">Producto</th>
                     <th scope="col">Cantidad</th>
                     <th scope="col">Precio</th>
                     <th scope="col">Costo</th>
@@ -102,6 +109,8 @@ export default {
             },
             ProductosGuardados:[],
             isNew: true,
+            busqueda: '',
+            ProductosOriginales:[],
         }
     },
     methods:{
@@ -120,6 +129,7 @@ export default {
                 .then(response => {
                     this.CancelarNuevoProductoD();
                     this.ProductosGuardados.push(response.data);
+                    this.ProductosOriginales = [...this.ProductosGuardados];
                     Swal.fire({
                     icon: 'success',
                     title: 'Producto guardado con éxito',
@@ -127,6 +137,7 @@ export default {
                     timer: 1500
                     });
                     this.CancelarNuevoProductoD();
+                    this.filtrarProductos();
                 })
                 .catch(error => {
                     console.error('Error al crear el producto', error);
@@ -139,6 +150,7 @@ export default {
                     this.CancelarNuevoProductoD();
                     // Update the product in ProductosGuardados on successful update
                     this.ProductosGuardados.splice(this.ProductosIndex, 1, response.data);
+                    this.ProductosOriginales = [...this.ProductosGuardados];
                     Swal.fire({
                     icon: 'success',
                     title: 'Producto actualizado con éxito',
@@ -146,6 +158,7 @@ export default {
                     timer: 1500
                     });
                     this.CancelarNuevoProductoD();
+                    this.filtrarProductos();
                 })
                 .catch(error => {
                     console.error('Error al actualizar el producto', error);
@@ -153,7 +166,29 @@ export default {
             }
         },
 
+        filtrarProductos() {
+            if (this.busqueda.trim() === '') {
+                // Si la búsqueda está vacía, mostrar todos los productos originales
+                this.ProductosGuardados = [...this.ProductosOriginales];  // Usa la copia de los productos originales
+                return;
+            }
 
+            const filtro = this.busqueda.toLowerCase().trim();
+            this.ProductosGuardados = this.ProductosOriginales.filter(producto => {
+                return producto.nombre.toLowerCase().includes(filtro);
+            });
+        },
+
+
+        buscarProductos() {
+            if (this.busqueda.trim() === '') {
+                // Si la búsqueda está vacía, mostrar todos los productos
+                this.getProductos();
+            } else {
+                // Filtrar productos según la búsqueda
+                this.filtrarProductos();
+            }
+        },
         CancelarNuevoProductoD(){
             this.Productos.id = null;
             this.Productos.nombre ='';
@@ -190,6 +225,7 @@ export default {
             .get('/productos')
             .then(response => {
                 this.ProductosGuardados = response.data;
+                this.ProductosOriginales = [...response.data];
                 console.log(this.ProductosGuardados,'Mis datos');
             })
         },
@@ -220,6 +256,8 @@ export default {
 };
 </script>
 
-<script>
-
-</script>
+<style>
+.mdi-magnify{
+    font-size: 40px;
+}
+</style>
