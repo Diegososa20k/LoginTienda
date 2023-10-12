@@ -253,6 +253,30 @@ export default {
         },
 
         EditarProducto(id, index) {
+            const indexGlobal = (this.paginaActual - 1) * this.productosPorPagina + index;
+            const producto = this.ProductosGuardados[indexGlobal];
+
+            // Set isNew to false indicating that it's an update
+            this.isNew = false;
+
+            // Set the ProductosIndex to the index of the product being edited
+            this.ProductosIndex = indexGlobal;
+
+            // Update the Productos object
+            this.Productos = {
+                id: producto.id,
+                nombre: producto.nombre,
+                costo: producto.costo,
+                precio: producto.precio,
+                cantidad: producto.cantidad
+            };
+        },
+
+        //El siguiente meetodo es para ediar, sin embargo usa un index normal y no global
+        //revisar el codigo de este con el de arriba (el de arriba si usa el global)
+        //y ver como afecta y funciona el index global
+
+        /*EditarProducto(id, index) {
             const producto = this.ProductosGuardados[index];
 
             // Set isNew to false indicating that it's an update
@@ -269,7 +293,8 @@ export default {
                 precio: producto.precio,
                 cantidad: producto.cantidad
             };
-        },
+        },*/
+
 
         //paginacion
 
